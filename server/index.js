@@ -7,7 +7,7 @@ const morgan = require('morgan');
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, './public')));
+app.use(express.static('public'));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));

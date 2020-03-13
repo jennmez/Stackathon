@@ -26,9 +26,16 @@ window.addEventListener('click', function(event) {
   mouse.x = event.x;
   mouse.y = event.y;
   console.log(radius);
-  // creates a circle on the mouse click
+
+  //// creates a circle on the mouse click
   ctx.beginPath();
   ctx.arc(mouse.x, mouse.y, radius, 0, Math.PI * 2, false);
   ctx.strokeStyle = '#214E34';
   ctx.stroke();
+});
+
+// event listener to resize the window as the user resizes
+window.addEventListener('resize', () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
 });
