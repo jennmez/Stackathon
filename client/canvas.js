@@ -10,7 +10,7 @@ canvas.height = window.innerHeight;
 // used in all the shapes created
 let ctx = canvas.getContext('2d');
 
-// random circle size generator
+// random ball size generator
 let radius = randomIntFromRange(30, 60);
 
 //random color generator
@@ -33,26 +33,33 @@ let mouse = {
   y: undefined,
 };
 
+// set a ball variable so it exists in the global scope, making it available to animate
+let ball;
+let ballArray = [];
+function init(ball) {
+  ball.draw();
+  ballArray.push(ball);
+  animate();
+}
+
 // event listener for a mouse move
 // window.addEventListener('mousemove', function(event) {
 //   mouse.x = event.x;
 //   mouse.y = event.y;
 // });
 
-// set a circle variable so it exists in the global scope, making it available to animate
-let circle;
-
 // event listener for a mouse click
 window.addEventListener('click', function(event) {
-  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  // ctx.clearRect(0, 0, innerWidth, innerHeight);
   mouse.x = event.x;
   mouse.y = event.y;
-  //// reassigns circle to the variable we created
-  circle = new Ball(mouse.x, mouse.y, dx, dy, radius, color);
-  //// draws it
-  circle.draw();
-  //// starts that animation!
-  animate();
+  //// reassigns ball to the variable we created
+  ball = new Ball(mouse.x, mouse.y, dx, dy, radius, color);
+  // //// draws it
+  // ball.draw();
+  // //// starts that animation!
+  // animate();
+  init(ball);
 });
 
 // event listener to resize the window as the user resizes
@@ -100,7 +107,6 @@ class Ball {
     ctx.closePath();
   }
 }
-// const circle = new Ball(300, 300, 2, radius, color);
 
 function animate() {
   // calls the animate function through request
@@ -108,5 +114,10 @@ function animate() {
   // clears the canvas with each movement
   // without it, you'll have a trail
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  circle.update();
+
+  for (let i = 0; i < ballArray.length; i++) {
+    ballArray[i].update();
+  }
+
+  // ball.update();
 }
