@@ -1,4 +1,4 @@
-import { randomIntFromRange, randomColor } from './utils';
+import { randomIntFromRange, randomColor, getDistance } from './utils';
 
 // makes canvas from html tag
 let canvas = document.getElementById('canvas');
@@ -39,15 +39,12 @@ let ballArray = [];
 function init(ball) {
   ball.draw();
   ballArray.push(ball);
+  // if (!ball.animated) {
   animate();
+  //   ball.animated = true;
+  // }
+  console.log('array upon animation', ballArray);
 }
-
-// event listener for a mouse move
-// window.addEventListener('mousemove', function(event) {
-//   mouse.x = event.x;
-//   mouse.y = event.y;
-// });
-
 // event listener for a mouse click
 window.addEventListener('click', function(event) {
   // ctx.clearRect(0, 0, innerWidth, innerHeight);
@@ -55,6 +52,7 @@ window.addEventListener('click', function(event) {
   mouse.y = event.y;
   //// reassigns ball to the variable we created
   ball = new Ball(mouse.x, mouse.y, dx, dy, radius, color);
+  console.log('ball upon creation', ball);
   // //// draws it
   // ball.draw();
   // //// starts that animation!
@@ -76,6 +74,7 @@ class Ball {
     this.dy = dy;
     this.radius = radius;
     this.color = color;
+    this.animated = false;
   }
 
   update() {
@@ -115,9 +114,7 @@ function animate() {
   // without it, you'll have a trail
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < ballArray.length; i++) {
-    ballArray[i].update();
-  }
-
-  // ball.update();
+  ballArray.forEach(ball => {
+    ball.update();
+  });
 }
