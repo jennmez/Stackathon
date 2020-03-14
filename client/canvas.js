@@ -23,7 +23,9 @@ let color = randomColor([
 ]);
 
 let gravity = 1;
-let friction = 0.99;
+let friction = 0.9;
+let dx = randomIntFromRange(-2, 2);
+let dy = randomIntFromRange(-2, 2);
 
 // tracks the 'x' 'y' coordinates
 let mouse = {
@@ -46,7 +48,7 @@ window.addEventListener('click', function(event) {
   mouse.x = event.x;
   mouse.y = event.y;
   //// reassigns circle to the variable we created
-  circle = new Ball(mouse.x, mouse.y, 2, radius, color);
+  circle = new Ball(mouse.x, mouse.y, dx, dy, radius, color);
   //// draws it
   circle.draw();
   //// starts that animation!
@@ -60,9 +62,10 @@ window.addEventListener('resize', () => {
 });
 
 class Ball {
-  constructor(x, y, dy, radius, color) {
+  constructor(x, y, dx, dy, radius, color) {
     this.x = x;
     this.y = y;
+    this.dx = dx;
     this.dy = dy;
     this.radius = radius;
     this.color = color;
@@ -77,6 +80,14 @@ class Ball {
       // increases the speed as the ball falls
       this.dy += gravity;
     }
+    if (
+      this.x + this.radius + this.dx > canvas.width ||
+      this.x - this.radius <= 0
+    ) {
+      // making sure our ball's velocity slows down due to friction (fraction)
+      this.dx = -this.dx;
+    }
+    this.x += this.dx;
     this.y += this.dy;
     this.draw();
   }
