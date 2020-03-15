@@ -36,14 +36,16 @@ let mouse = {
 // set a ball variable so it exists in the global scope, making it available to animate
 let ball;
 let ballArray = [];
+let miniBall;
 function init(ball) {
   ball.draw();
+  miniBall = [];
   ballArray.push(ball);
+  miniBall.push();
   // if (!ball.animated) {
   animate();
   //   ball.animated = true;
   // }
-  console.log('array upon animation', ballArray);
 }
 // event listener for a mouse click
 window.addEventListener('click', function(event) {
@@ -51,7 +53,7 @@ window.addEventListener('click', function(event) {
   mouse.x = event.x;
   mouse.y = event.y;
   //// reassigns ball to the variable we created
-  ball = new Ball(mouse.x, mouse.y, dx, dy, radius, color);
+  ball = new Ball(mouse.x, mouse.y, radius, color, dx, dy);
   console.log('ball upon creation', ball);
   // //// draws it
   // ball.draw();
@@ -67,16 +69,58 @@ window.addEventListener('resize', () => {
 });
 
 class Ball {
-  constructor(x, y, dx, dy, radius, color) {
+  constructor(x, y, radius, color, dx, dy) {
     this.x = x;
     this.y = y;
-    this.dx = dx;
-    this.dy = dy;
     this.radius = radius;
     this.color = color;
+    this.dx = dx;
+    this.dy = dy;
+
     this.animated = false;
   }
 
+  update() {
+    // making sure our ball recognizes the "floor"
+    if (this.y + this.radius + this.dy > canvas.height) {
+      // making sure our ball's velocity slows down due to friction (fraction)
+      this.dy = -this.dy * friction;
+      this.shatter();
+    } else {
+      // increases the speed as the ball falls
+      this.dy += gravity;
+    }
+    if (
+      this.x + this.radius + this.dx > canvas.width ||
+      this.x - this.radius <= 0
+    ) {
+      // making sure our ball's velocity slows down due to friction (fraction)
+      this.dx = -this.dx;
+    }
+    this.x += this.dx;
+    this.y += this.dy;
+    this.draw();
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+  shatter() {
+    for (let i = 0; i < 7; i++) {
+      miniBall.push(new MiniBall(this.x, this.y, 2, 'red'));
+      console.log(miniBall);
+    }
+  }
+}
+
+class MiniBall extends Ball {
+  constructor(x, y, radius, color, dx, dy) {
+    super();
+  }
   update() {
     // making sure our ball recognizes the "floor"
     if (this.y + this.radius + this.dy > canvas.height) {
