@@ -10,6 +10,19 @@ canvas.height = window.innerHeight;
 // used in all the shapes created
 let ctx = canvas.getContext('2d');
 
+// // random ball size generator
+//** if placed outside & called just by variable in functions, each ball will be the same size & color
+// let radius = randomIntFromRange(30, 60);
+
+// //random color generator
+// let color = randomColor([
+//   '#E8871E',
+//   '#EDB458',
+//   '#D4D4AA',
+//   '#BAD4AA',
+//   '#EBF5DF',
+// ]); */
+
 let colorArray = ['#E8871E', '#EDB458', '#D4D4AA', '#BAD4AA', '#EBF5DF'];
 
 let gravity = 1;
@@ -27,24 +40,14 @@ let mouse = {
 let ball;
 let ballArray = [];
 let miniBallArray = [];
-
-const background = ctx.createLinearGradient(0, 0, 0, canvas.height);
-background.addColorStop(0, '#FEFFEA');
-background.addColorStop(1, '#D4D4AA');
-//fills on loading
-ctx.fillStyle = background;
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
 function init(ball) {
   ball.draw();
   ballArray.push(ball);
-
-  if (ballArray.length === 5) {
-    animate();
-  }
+  animate();
 }
 // event listener for a mouse click
 window.addEventListener('click', function(event) {
+  // ctx.clearRect(0, 0, innerWidth, innerHeight);
   mouse.x = event.x;
   mouse.y = event.y;
   //// reassigns variable we created to the new ball
@@ -57,15 +60,6 @@ window.addEventListener('click', function(event) {
     dy
   );
   init(ball);
-});
-
-window.addEventListener('resize', () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  init();
 });
 
 // event listener to resize the window as the user resizes
@@ -114,27 +108,22 @@ class Ball {
     ctx.closePath();
   }
   shatter() {
-    if (this.radius - 5 > 0) {
-      this.radius -= 5;
-    }
     for (let i = 0; i < 7; i++) {
-      miniBallArray.push(new MiniBall(this.x, this.y, 4, '#E8871E'));
+      miniBallArray.push(new MiniBall(this.x, this.y, 10, 'red'));
     }
   }
 }
 
 class MiniBall extends Ball {
-  constructor(x, y, radius, color) {
-    super(x, y, radius, color);
+  constructor(x, y, radius, color, dx, dy) {
+    super(x, y, radius, color, dx, dy);
     this.dx = randomIntFromRange(-5, 5);
-    this.dy = randomIntFromRange(-15, 15);
-    this.gravity = 0.3;
-    this.timeToLive -= 1;
+    this.dy = randomIntFromRange(-5, 5);
   }
   update() {
     this.draw();
     if (this.y + this.radius + this.dy > canvas.height) {
-      this.dy = -this.dy * friction;
+      this.dy = -this.dy * this.friction;
     } else {
       this.dy += this.gravity;
     }
@@ -156,28 +145,12 @@ function animate() {
   requestAnimationFrame(animate);
   // clears the canvas with each movement
   // without it, you'll have a trail
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // ballArray.filter(ball => ball.radius - 5 > 0);
-  ballArray.forEach((ball, index) => {
+  ballArray.forEach(ball => {
     ball.update();
-    if (
-      ball.radius === 0 ||
-      ball.radius === 1 ||
-      ball.radius === 2 ||
-      ball.radius === 3 ||
-      ball.radius === 4 ||
-      ball.radius === 5
-    ) {
-      ballArray.splice(index, 1);
-    }
   });
-
-  miniBallArray.forEach((miniBall, index) => {
+  miniBallArray.forEach(miniBall => {
     miniBall.update();
-    if (miniBall.timeToLive === 0) {
-      miniBall.splice(index, 1);
-    }
   });
 }
