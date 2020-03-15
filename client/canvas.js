@@ -10,17 +10,20 @@ canvas.height = window.innerHeight;
 // used in all the shapes created
 let ctx = canvas.getContext('2d');
 
-// random ball size generator
-let radius = randomIntFromRange(30, 60);
+// // random ball size generator
+//** if placed outside & called just by variable in functions, each ball will be the same size & color
+// let radius = randomIntFromRange(30, 60);
 
-//random color generator
-let color = randomColor([
-  '#E8871E',
-  '#EDB458',
-  '#D4D4AA',
-  '#BAD4AA',
-  '#EBF5DF',
-]);
+// //random color generator
+// let color = randomColor([
+//   '#E8871E',
+//   '#EDB458',
+//   '#D4D4AA',
+//   '#BAD4AA',
+//   '#EBF5DF',
+// ]); */
+
+let colorArray = ['#E8871E', '#EDB458', '#D4D4AA', '#BAD4AA', '#EBF5DF'];
 
 let gravity = 1;
 let friction = 0.9;
@@ -36,29 +39,27 @@ let mouse = {
 // set a ball variable so it exists in the global scope, making it available to animate
 let ball;
 let ballArray = [];
-let miniBall;
+let miniBallArray;
 function init(ball) {
   ball.draw();
-  miniBall = [];
+  miniBallArray = [];
   ballArray.push(ball);
-  miniBall.push();
-  // if (!ball.animated) {
   animate();
-  //   ball.animated = true;
-  // }
 }
 // event listener for a mouse click
 window.addEventListener('click', function(event) {
   // ctx.clearRect(0, 0, innerWidth, innerHeight);
   mouse.x = event.x;
   mouse.y = event.y;
-  //// reassigns ball to the variable we created
-  ball = new Ball(mouse.x, mouse.y, radius, color, dx, dy);
-  console.log('ball upon creation', ball);
-  // //// draws it
-  // ball.draw();
-  // //// starts that animation!
-  // animate();
+  //// reassigns variable we created to the new ball
+  ball = new Ball(
+    mouse.x,
+    mouse.y,
+    randomIntFromRange(30, 60),
+    randomColor(colorArray),
+    dx,
+    dy
+  );
   init(ball);
 });
 
@@ -76,8 +77,6 @@ class Ball {
     this.color = color;
     this.dx = dx;
     this.dy = dy;
-
-    this.animated = false;
   }
 
   update() {
@@ -104,47 +103,38 @@ class Ball {
 
   draw() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
   }
   shatter() {
     for (let i = 0; i < 7; i++) {
-      miniBall.push(new MiniBall(this.x, this.y, 2, 'red'));
-      console.log(miniBall);
+      miniBallArray.push(new MiniBall(this.x, this.y, 10, 'red'));
     }
   }
 }
 
 class MiniBall extends Ball {
   constructor(x, y, radius, color, dx, dy) {
-    super();
+    super(x, y, radius, color, dx, dy);
+    this.dx = randomIntFromRange(-5, 5);
+    this.dy = randomIntFromRange(-5, 5);
   }
   update() {
-    // making sure our ball recognizes the "floor"
+    this.draw();
     if (this.y + this.radius + this.dy > canvas.height) {
-      // making sure our ball's velocity slows down due to friction (fraction)
-      this.dy = -this.dy * friction;
+      this.dy = -this.dy * this.friction;
     } else {
-      // increases the speed as the ball falls
-      this.dy += gravity;
-    }
-    if (
-      this.x + this.radius + this.dx > canvas.width ||
-      this.x - this.radius <= 0
-    ) {
-      // making sure our ball's velocity slows down due to friction (fraction)
-      this.dx = -this.dx;
+      this.dy += this.gravity;
     }
     this.x += this.dx;
     this.y += this.dy;
-    this.draw();
   }
 
   draw() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, Math.PI * 2, false);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
@@ -160,5 +150,8 @@ function animate() {
 
   ballArray.forEach(ball => {
     ball.update();
+  });
+  miniBallArray.forEach(miniBall => {
+    miniBall.update();
   });
 }
