@@ -2,11 +2,20 @@ body {
   margin: 0;
 }
 
-p {
-  margin: 0;
-  font-family: 'Quicksand', sans-serif;
+#canvas {
+  background: linear-gradient(#fffbef, #ffeee8);
+}
+
+.copy {
+  position: absolute;
+  top: 5%;
+  left: 0;
+  width: 100%;
   text-align: center;
-  background-color: #fffbef;
-  font-size: 3em;
+  pointer-events: none;
+  font-family: 'Quicksand', 'Futura', sans-serif;
   color: #fc8c41;
+  font-size: 3em;
+  font-weight: 700;
+  margin: 0;
 }

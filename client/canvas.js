@@ -14,8 +14,6 @@ let colorArray = ['#D6E2BE', '#C8E087', '#FC8C41', '#FFA582'];
 
 let gravity = 1;
 let friction = 0.9;
-// let dx = randomIntFromRange(-2, 2);
-// let dy = randomIntFromRange(-2, 2);
 
 // tracks the 'x' 'y' coordinates
 let mouse = {
@@ -27,13 +25,6 @@ let mouse = {
 let ball;
 let ballArray = [];
 let miniBallArray = [];
-
-const background = ctx.createLinearGradient(0, 0, 0, canvas.height);
-background.addColorStop(0, '#FFFBEF');
-background.addColorStop(1, '#FFEEE8');
-//fills on loading
-ctx.fillStyle = background;
-ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 function init(ball) {
   ball.draw();
@@ -63,8 +54,6 @@ window.addEventListener('resize', () => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
 
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
   init();
 });
 
@@ -157,8 +146,8 @@ function animate() {
   requestAnimationFrame(animate);
   // clears the canvas with each movement
   // without it, you'll have a trail
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // ballArray.filter(ball => ball.radius - 5 > 0);
   ballArray.forEach((ball, index) => {
