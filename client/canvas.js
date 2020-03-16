@@ -10,12 +10,12 @@ canvas.height = window.innerHeight;
 // used in all the shapes created
 let ctx = canvas.getContext('2d');
 
-let colorArray = ['#E8871E', '#EDB458', '#D4D4AA', '#BAD4AA', '#EBF5DF'];
+let colorArray = ['#D6E2BE', '#C8E087', '#FC8C41', '#FFA582'];
 
 let gravity = 1;
 let friction = 0.9;
-let dx = randomIntFromRange(-2, 2);
-let dy = randomIntFromRange(-2, 2);
+// let dx = randomIntFromRange(-2, 2);
+// let dy = randomIntFromRange(-2, 2);
 
 // tracks the 'x' 'y' coordinates
 let mouse = {
@@ -29,8 +29,8 @@ let ballArray = [];
 let miniBallArray = [];
 
 const background = ctx.createLinearGradient(0, 0, 0, canvas.height);
-background.addColorStop(0, '#FEFFEA');
-background.addColorStop(1, '#D4D4AA');
+background.addColorStop(0, '#FFFBEF');
+background.addColorStop(1, '#FFEEE8');
 //fills on loading
 ctx.fillStyle = background;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -53,8 +53,8 @@ window.addEventListener('click', function(event) {
     mouse.y,
     randomIntFromRange(30, 60),
     randomColor(colorArray),
-    dx,
-    dy
+    randomIntFromRange(-2, 2),
+    randomIntFromRange(-2, 2)
   );
   init(ball);
 });
@@ -118,7 +118,7 @@ class Ball {
       this.radius -= 5;
     }
     for (let i = 0; i < 7; i++) {
-      miniBallArray.push(new MiniBall(this.x, this.y, 4, '#E8871E'));
+      miniBallArray.push(new MiniBall(this.x, this.y, 4, '#FC9652'));
     }
   }
 }
@@ -128,8 +128,8 @@ class MiniBall extends Ball {
     super(x, y, radius, color);
     this.dx = randomIntFromRange(-5, 5);
     this.dy = randomIntFromRange(-15, 15);
-    this.gravity = 0.3;
-    this.timeToLive -= 1;
+    this.gravity = 0.2;
+    this.timeToLive = 100;
   }
   update() {
     this.draw();
@@ -140,6 +140,7 @@ class MiniBall extends Ball {
     }
     this.x += this.dx;
     this.y += this.dy;
+    this.timeToLive -= 1;
   }
 
   draw() {
@@ -177,7 +178,7 @@ function animate() {
   miniBallArray.forEach((miniBall, index) => {
     miniBall.update();
     if (miniBall.timeToLive === 0) {
-      miniBall.splice(index, 1);
+      miniBallArray.splice(index, 1);
     }
   });
 }
