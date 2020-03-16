@@ -50,13 +50,6 @@ window.addEventListener('click', function(event) {
   init(ball);
 });
 
-window.addEventListener('resize', () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-
-  init();
-});
-
 // event listener to resize the window as the user resizes
 window.addEventListener('resize', () => {
   canvas.width = innerWidth;
@@ -102,6 +95,7 @@ class Ball {
     ctx.fill();
     ctx.closePath();
   }
+
   shatter() {
     if (this.radius - 5 > 0) {
       this.radius -= 5;
@@ -144,9 +138,9 @@ class MiniBall extends Ball {
 function animate() {
   // calls the animate function through request
   requestAnimationFrame(animate);
+
   // clears the canvas with each movement
   // without it, you'll have a trail
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // ballArray.filter(ball => ball.radius - 5 > 0);
