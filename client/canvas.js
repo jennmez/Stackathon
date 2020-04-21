@@ -1,4 +1,4 @@
-import { randomIntFromRange, randomColor, getDistance } from './utils';
+import { randomIntFromRange, randomColor } from './utils';
 
 // makes canvas from html tag
 let canvas = document.getElementById('canvas');
@@ -10,12 +10,14 @@ canvas.height = window.innerHeight;
 // used in all the shapes created
 let ctx = canvas.getContext('2d');
 
+// colors the balls will be
 let colorArray = ['#D6E2BE', '#C8E087', '#FC8C41', '#FFA582'];
 
+// constants
 let gravity = 1;
 let friction = 0.9;
 
-// tracks the 'x' 'y' coordinates
+// tracks the 'x' 'y' coordinates of the mouse
 let mouse = {
   x: undefined,
   y: undefined,
@@ -23,22 +25,28 @@ let mouse = {
 
 // set a ball variable so it exists in the global scope, making it available to animate
 let ball;
+
+// for all the larger balls, initially empty array
 let ballArray = [];
+
+// for particle explostions, initially empty
 let miniBallArray = [];
 
+// once called, ball will form and be stored in the array
 function init(ball) {
   ball.draw();
   ballArray.push(ball);
 
+  // starts animation later, also stops gravity from the
   if (ballArray.length === 5) {
     animate();
   }
 }
 // event listener for a mouse click
-window.addEventListener('click', function(event) {
+window.addEventListener('click', function (event) {
   mouse.x = event.x;
   mouse.y = event.y;
-  //// reassigns variable we created to the new ball
+  // reassigns variable we created to the new ball, assigns radius, color and velocities using utility function
   ball = new Ball(
     mouse.x,
     mouse.y,
@@ -108,10 +116,13 @@ class Ball {
 
 class MiniBall extends Ball {
   constructor(x, y, radius, color) {
+    // inherited from the parent
     super(x, y, radius, color);
+    // assigned to each mini explosion
     this.dx = randomIntFromRange(-5, 5);
     this.dy = randomIntFromRange(-15, 15);
     this.gravity = 0.2;
+    // only exist for 100 frames, then disappear to clear canvas
     this.timeToLive = 100;
   }
   update() {
@@ -140,10 +151,9 @@ function animate() {
   requestAnimationFrame(animate);
 
   // clears the canvas with each movement
-  // without it, you'll have a trail
+  // without it, each ball will make a trail
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // ballArray.filter(ball => ball.radius - 5 > 0);
   ballArray.forEach((ball, index) => {
     ball.update();
     if (
@@ -154,7 +164,7 @@ function animate() {
       ball.radius === 4 ||
       ball.radius === 5
     ) {
-      ballArray.splice(index, 1);
+      ballArray.slice(index, 1);
     }
   });
 
