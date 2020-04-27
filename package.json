@@ -7,7 +7,6 @@
     "build-client": "webpack -p",
     "deploy": "script/deploy",
     "heroku-token": "script/encrypt-heroku-auth-token.js",
-    "build": "webpack",
     "start": "node server",
     "start-dev": "webpack -w & nodemon main.js",
     "start-server": "nodemon main.js -e html,js,css --ignore public"
