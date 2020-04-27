@@ -2,7 +2,7 @@
   "name": "stackathon",
   "version": "1.0.0",
   "description": "",
-  "main": "/index.js",
+  "main": "main.js",
   "scripts": {
     "build-client": "webpack -p",
     "deploy": "script/deploy",
