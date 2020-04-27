@@ -164,7 +164,7 @@ function animate() {
       ball.radius === 4 ||
       ball.radius === 5
     ) {
-      ballArray.slice(index, 1);
+      ballArray.splice(index, 1);
     }
   });
 
